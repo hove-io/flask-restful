@@ -14,12 +14,12 @@ setup(
     include_package_data=True,
     platforms='any',
     test_suite = 'nose.collector',
-    setup_requires=[
-        'nose==1.3.1',
-        'mock==1.0.1',
-        'six==1.5.2',
-        'blinker==1.3',
-    ],
+    #setup_requires=[
+    #    'nose==1.3.1',
+    #    'mock==1.0.1',
+    #    'six==1.5.2',
+    #    'blinker==1.3',
+    #],
     install_requires=[
         'Flask==0.10.1',
     ],
