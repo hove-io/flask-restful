@@ -15,7 +15,7 @@ setup(
     platforms='any',
     test_suite = 'nose.collector',
     setup_requires=[
-        'nose>==1.3.1',
+        'nose==1.3.1',
         'mock==1.0.1',
         'six==1.5.2',
         'blinker==1.3',
