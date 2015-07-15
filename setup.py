@@ -15,13 +15,13 @@ setup(
     platforms='any',
     test_suite = 'nose.collector',
     setup_requires=[
-        'nose>=1.1.2',
-        'mock>=0.8',
-        'six>=1.1.0',
-        'blinker>=1.2',
+        'nose>==1.3.1',
+        'mock==1.0.1',
+        'six==1.5.2',
+        'blinker==1.3',
     ],
     install_requires=[
-        'Flask>=0.8',
+        'Flask==0.10.1',
     ],
     # Install these with "pip install -e '.[paging]'" or '.[docs]'
     extras_require={
