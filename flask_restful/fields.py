@@ -30,7 +30,7 @@ class MarshallingException(Exception):
 
 
 def is_indexable_but_not_string(obj):
-    return not hasattr(obj, "strip") and hasattr(obj, "__iter__")
+    return not hasattr(obj, "strip") and (hasattr(obj, "__iter__") or hasattr(obj, "__getitem__"))
 
 
 def get_value(key, obj, default=None):
