@@ -628,8 +628,7 @@ def marshal(data, fields, display_null=True):
         return cls
 
     if isinstance(data, (list, tuple)):
-        return (OrderedDict([(envelope, [marshal(d, fields) for d in data])])
-                if envelope else [marshal(d, fields) for d in data])
+        return [marshal(d, fields) for d in data]
 
     items = []
     for k, v in fields.items():
