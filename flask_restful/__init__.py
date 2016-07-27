@@ -618,7 +618,7 @@ def marshal(data, fields, display_null=True):
     >>> mfields = { 'a': fields.Raw }
 
     >>> marshal(data, mfields)
-    OrderedDict([('a', 100)])
+    {'a': 100}
 
     """
 
@@ -636,7 +636,7 @@ def marshal(data, fields, display_null=True):
                                else make(v).output(k, data)
         if display_null or not(tmp is None):
             items.append((k, tmp))
-    return OrderedDict(items)
+    return dict(items)
 
 
 class marshal_with(object):
@@ -650,7 +650,7 @@ class marshal_with(object):
     ...
     ...
     >>> get()
-    OrderedDict([('a', 100)])
+    {'a': 100}
 
     >>> @marshal_with(mfields, envelope='data')
     ... def get():
@@ -658,7 +658,7 @@ class marshal_with(object):
     ...
     ...
     >>> get()
-    OrderedDict([('data', OrderedDict([('a', 100)]))])
+    {'data': {'a': 100}}
 
     see :meth:`flask_restful.marshal`
     """
