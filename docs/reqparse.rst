@@ -8,7 +8,7 @@ Request Parsing
     The whole request parser part of Flask-RESTful is slated for removal and
     will be replaced by documentation on how to integrate with other packages
     that do the input/output stuff better
-    (such as `marshmallow <http://marshmallow.readthedocs.org>`_).
+    (such as `marshmallow <https://marshmallow.readthedocs.io>`_).
     This means that it will be maintained until 2.0 but consider it deprecated.
     Don't worry, if you have code using that now and wish to continue doing so,
     it's not going to go away any time too soon.
@@ -226,10 +226,9 @@ then the error message will be the value of ``help``.
 
 ``help`` may include an interpolation token, ``{error_msg}``, that will be
 replaced with the string representation of the type error. This allows the
-message to be customized while preserving the original error:
+message to be customized while preserving the original error ::
 
     from flask_restful import reqparse
-
 
     parser = reqparse.RequestParser()
     parser.add_argument(

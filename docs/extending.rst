@@ -21,7 +21,7 @@ mediatypes to your API, you’ll need to declare your supported representations
 on the :class:`~Api` object. ::
 
     app = Flask(__name__)
-    api = restful.Api(app)
+    api = Api(app)
 
     @api.representation('application/json')
     def output_json(data, code, headers=None):
@@ -130,7 +130,7 @@ To support other representations (xml, csv, html), you can use the
 :meth:`~Api.representation` decorator.  You need to have a reference to your
 API. ::
 
-    api = restful.Api(app)
+    api = Api(app)
 
     @api.representation('text/csv')
     def output_csv(data, code, headers=None):
@@ -188,6 +188,29 @@ instance, if you want to build custom authentication into every request. ::
 
     class Resource(restful.Resource):
         method_decorators = [authenticate]   # applies to all inherited resources
+
+Alternatively, you can specify a dictionary of iterables that map to HTTP methods
+and the decorators will only apply to matching requests.
+
+.. code-block:: python
+
+    def cache(f):
+        @wraps(f)
+        def cacher(*args, **kwargs):
+            # caching stuff
+        return cacher
+
+    class MyResource(restful.Resource):
+        method_decorators = {'get': [cache]}
+
+         def get(self, *args, **kwargs):
+            return something_interesting(*args, **kwargs)
+
+         def post(self, *args, **kwargs):
+            return create_something(*args, **kwargs)
+
+In this case, the caching decorator would only apply to the `GET` request and not
+the `POST` request.
 
 Since Flask-RESTful Resources are actually Flask view objects, you can also
 use standard `flask view decorators <http://flask.pocoo.org/docs/views/#decorating-views>`_.
