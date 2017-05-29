@@ -3,14 +3,12 @@
 Quickstart
 ==========
 
-.. currentmodule:: flask.ext.restful
+.. currentmodule:: flask_restful
 
-It1s time to write your first REST API. This guide assumes you have `Flask
-<http://flask.pocoo.org>`_ and Flask-RESTful installed and a working
-understanding of Flask. If not, follow the steps in the Installation section,
-or read through the Flask Quickstart.
-
-
+It's time to write your first REST API. This guide assumes you have a working
+understanding of `Flask <http://flask.pocoo.org>`_, and that you have already
+installed both Flask and Flask-RESTful.  If not, then follow the steps in the
+:ref:`installation` section.
 
 A Minimal API
 -------------
@@ -18,12 +16,12 @@ A Minimal API
 A minimal Flask-RESTful API looks like this: ::
 
     from flask import Flask
-    from flask.ext import restful
+    from flask_restful import Resource, Api
 
     app = Flask(__name__)
-    api = restful.Api(app)
+    api = Api(app)
 
-    class HelloWorld(restful.Resource):
+    class HelloWorld(Resource):
         def get(self):
             return {'hello': 'world'}
 
@@ -32,33 +30,33 @@ A minimal Flask-RESTful API looks like this: ::
     if __name__ == '__main__':
         app.run(debug=True)
 
-
 Save this as api.py and run it using your Python interpreter. Note that we've
 enabled `Flask debugging <http://flask.pocoo.org/docs/quickstart/#debug-mode>`_
-mode to provide code reloading and better error messages. Debug mode should
-never be used in a production environment. ::
+mode to provide code reloading and better error messages. ::
 
     $ python api.py
      * Running on http://127.0.0.1:5000/
+     * Restarting with reloader
 
+.. warning::
+
+    Debug mode should never be used in a production environment!
 
 Now open up a new prompt to test out your API using curl ::
 
     $ curl http://127.0.0.1:5000/
     {"hello": "world"}
 
-
-
 Resourceful Routing
 -------------------
 The main building block provided by Flask-RESTful are resources. Resources are
 built on top of `Flask pluggable views <http://flask.pocoo.org/docs/views/>`_,
-giving you easy access to multiple HTTP methods just be defining methods on
+giving you easy access to multiple HTTP methods just by defining methods on
 your resource. A basic CRUD resource for a todo application (of course) looks
 like this: ::
 
     from flask import Flask, request
-    from flask.ext.restful import Resource, Api
+    from flask_restful import Resource, Api
 
     app = Flask(__name__)
     api = Api(app)
@@ -80,26 +78,27 @@ like this: ::
 
 You can try it like this: ::
 
-    You can try this example as follow:
-        $ curl http://localhost:5000/todo1 -d "data=Remember the milk" -X PUT
-        {"todo1": "Remember the milk"}
-        $ curl http://localhost:5000/todo1
-        {"todo1": "Remember the milk"}
-        $ curl http://localhost:5000/todo2 -d "data=Change my breakpads" -X PUT
-        {"todo2": "Change my breakpads"}
-        $ curl http://localhost:5000/todo2
-        {"todo2": "Change my breakpads"}
+    $ curl http://localhost:5000/todo1 -d "data=Remember the milk" -X PUT
+    {"todo1": "Remember the milk"}
+    $ curl http://localhost:5000/todo1
+    {"todo1": "Remember the milk"}
+    $ curl http://localhost:5000/todo2 -d "data=Change my brakepads" -X PUT
+    {"todo2": "Change my brakepads"}
+    $ curl http://localhost:5000/todo2
+    {"todo2": "Change my brakepads"}
 
-    Or from python if you have the requests library installed:
+
+Or from python if you have the ``requests`` library installed::
+
      >>> from requests import put, get
      >>> put('http://localhost:5000/todo1', data={'data': 'Remember the milk'}).json()
      {u'todo1': u'Remember the milk'}
      >>> get('http://localhost:5000/todo1').json()
      {u'todo1': u'Remember the milk'}
-     >>> put('http://localhost:5000/todo2', data={'data': 'Change my breakpads'}).json()
-     {u'todo2': u'Change my breakpads'}
+     >>> put('http://localhost:5000/todo2', data={'data': 'Change my brakepads'}).json()
+     {u'todo2': u'Change my brakepads'}
      >>> get('http://localhost:5000/todo2').json()
-     {u'todo2': u'Change my breakpads'}
+     {u'todo2': u'Change my brakepads'}
 
 Flask-RESTful understands multiple kinds of return values from view methods.
 Similar to Flask, you can return any iterable and it will be converted into a
@@ -127,8 +126,8 @@ Endpoints
 ---------
 
 Many times in an API, your resource will have multiple URLs. You can pass
-multiple URLs to the :py:meth:`Api.add_resource` method on the Api object. Each one
-will be routed to your :py:class:`Resource` ::
+multiple URLs to the :meth:`~Api.add_resource` method on the `Api` object.
+Each one will be routed to your :class:`Resource` ::
 
     api.add_resource(HelloWorld,
         '/',
@@ -139,6 +138,13 @@ You can also match parts of the path as variables to your resource methods. ::
     api.add_resource(Todo,
         '/todo/<int:todo_id>', endpoint='todo_ep')
 
+.. note ::
+
+    If a request does not match any of your application's endpoints,
+    Flask-RESTful will return a 404 error message with suggestions of other
+    endpoints that closely match the requested endpoint. This can be disabled
+    by setting ``ERROR_404_HELP`` to ``False`` in your application config.
+
 Argument Parsing
 ----------------
 
@@ -147,41 +153,45 @@ form encoded data), it's still a pain to validate form data. Flask-RESTful
 has built-in support for request data validation using a library similar to
 `argparse <http://docs.python.org/dev/library/argparse.html>`_. ::
 
-    from flask.ext.restful import reqparse
+    from flask_restful import reqparse
 
     parser = reqparse.RequestParser()
     parser.add_argument('rate', type=int, help='Rate to charge for this resource')
     args = parser.parse_args()
 
+.. note ::
 
-Note that unlike the argparse module,
-:py:meth:`reqparse.RequestParser.parse_args` returns a Python dictionary
-instead of a custom data structure.
+    Unlike the argparse module, :meth:`reqparse.RequestParser.parse_args`
+    returns a Python dictionary instead of a custom data structure.
 
-Using the :py:class:`reqparse` module also gives you sane error messages for
+Using the :class:`reqparse` module also gives you sane error messages for
 free. If an argument fails to pass validation, Flask-RESTful will respond with
 a 400 Bad Request and a response highlighting the error. ::
 
-    $ curl -d 'rate=foo' http://127.0.0.1:5000/
+    $ curl -d 'rate=foo' http://127.0.0.1:5000/todos
     {'status': 400, 'message': 'foo cannot be converted to int'}
 
 
-The :py:class:`types` module provides a number of included common conversion
-functions such as :py:meth:`types.date` and :py:meth:`types.url`.
+The :class:`inputs` module provides a number of included common conversion
+functions such as :meth:`inputs.date` and :meth:`inputs.url`.
 
+Calling ``parse_args`` with ``strict=True`` ensures that an error is thrown if
+the request includes arguments your parser does not define. ::
+
+    args = parser.parse_args(strict=True)
 
 Data Formatting
 ---------------
 
-By default, all fields in your return iterable will be rendered as is. While
+By default, all fields in your return iterable will be rendered as-is. While
 this works great when you're just dealing with Python data structures,
-it can become very frustrating when working with objects. To solve with
-problem, Flask-RESTful provides the :py:class:`fields` module and the
-:py:meth:`marshal_with` decorator. Similar to the Django ORM and WTForm, you
-use the fields module to describe the structure of your response. ::
+it can become very frustrating when working with objects. To solve this
+problem, Flask-RESTful provides the :class:`fields` module and the
+:meth:`marshal_with` decorator. Similar to the Django ORM and WTForm, you
+use the ``fields`` module to describe the structure of your response. ::
 
     from collections import OrderedDict
-    from flask.ext.restful import fields, marshal_with
+    from flask_restful import fields, marshal_with
 
     resource_fields = {
         'task':   fields.String,
@@ -202,11 +212,11 @@ use the fields module to describe the structure of your response. ::
             return TodoDao(todo_id='my_todo', task='Remember the milk')
 
 The above example takes a python object and prepares it to be serialized. The
-:py:meth:`marshal_with` decorator will apply the transformation described by
+:meth:`marshal_with` decorator will apply the transformation described by
 ``resource_fields``. The only field extracted from the object is ``task``. The
-:py:class:`fields.Url` field is a special field that takes an endpoint name
-and generates a Url for that endpoint in the response. Many of the field types
-you need are already included. See the :py:class:`fields` guide for a complete
+:class:`fields.Url` field is a special field that takes an endpoint name
+and generates a URL for that endpoint in the response. Many of the field types
+you need are already included. See the :class:`fields` guide for a complete
 list.
 
 Full Example
@@ -215,7 +225,7 @@ Full Example
 Save this example in api.py ::
 
     from flask import Flask
-    from flask.ext.restful import reqparse, abort, Api, Resource
+    from flask_restful import reqparse, abort, Api, Resource
 
     app = Flask(__name__)
     api = Api(app)
@@ -232,11 +242,11 @@ Save this example in api.py ::
             abort(404, message="Todo {} doesn't exist".format(todo_id))
 
     parser = reqparse.RequestParser()
-    parser.add_argument('task', type=str)
+    parser.add_argument('task')
 
 
     # Todo
-    #   show a single todo item and lets you delete them
+    # shows a single todo item and lets you delete a todo item
     class Todo(Resource):
         def get(self, todo_id):
             abort_if_todo_doesnt_exist(todo_id)
@@ -255,14 +265,15 @@ Save this example in api.py ::
 
 
     # TodoList
-    #   shows a list of all todos, and lets you POST to add new tasks
+    # shows a list of all todos, and lets you POST to add new tasks
     class TodoList(Resource):
         def get(self):
             return TODOS
 
         def post(self):
             args = parser.parse_args()
-            todo_id = 'todo%d' % (len(TODOS) + 1)
+            todo_id = int(max(TODOS.keys()).lstrip('todo')) + 1
+            todo_id = 'todo%i' % todo_id
             TODOS[todo_id] = {'task': args['task']}
             return TODOS[todo_id], 201
 
@@ -270,7 +281,7 @@ Save this example in api.py ::
     ## Actually setup the Api resource routing here
     ##
     api.add_resource(TodoList, '/todos')
-    api.add_resource(Todo, '/todos/<string:todo_id>')
+    api.add_resource(Todo, '/todos/<todo_id>')
 
 
     if __name__ == '__main__':
@@ -332,9 +343,9 @@ Add a new task ::
 
 Update a task ::
 
-    $ curl http://localhost:5000/todos/todo3 -d "task=something different" -X POST -v
+    $ curl http://localhost:5000/todos/todo3 -d "task=something different" -X PUT -v
 
-    > POST /todos/todo3 HTTP/1.1
+    > PUT /todos/todo3 HTTP/1.1
     > Host: localhost:5000
     > Accept: */*
     > Content-Length: 20

@@ -3,13 +3,13 @@
 API Docs
 ========
 
-.. module:: flask.ext.restful
+.. module:: flask_restful
 
 
 .. autofunction:: marshal
 .. autofunction:: marshal_with
+.. autofunction:: marshal_with_field
 .. autofunction:: abort
-.. autofunction:: unauthorized
 
 
 Api
@@ -17,12 +17,16 @@ Api
 .. autoclass:: Api
    :members:
 
+    .. automethod:: unauthorized
+
 .. autoclass:: Resource
    :members:
 
 ReqParse
 --------
-.. automodule:: reqparse
+.. module:: reqparse
+
+.. autoclass:: RequestParser
    :members:
 
 .. autoclass:: Argument
@@ -34,13 +38,10 @@ Fields
 ------
 .. automodule:: fields
    :members:
+   :undoc-members:
 
-Types
------
-
-.. module:: flask.ext.restful.types 
-.. autofunction:: url
-.. autofunction:: date
-.. autofunction:: natural 
-.. autofunction:: boolean
-.. autofunction:: rfc822
+Inputs
+------
+.. automodule:: inputs
+   :members:
+   :undoc-members:
