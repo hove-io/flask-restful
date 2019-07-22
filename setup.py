@@ -21,7 +21,7 @@ setup(
     #    'blinker==1.3',
     #],
     install_requires=[
-        'Flask==0.12.3',
+        'Flask==1.0',
     ],
     # Install these with "pip install -e '.[paging]'" or '.[docs]'
     extras_require={
