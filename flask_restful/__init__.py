@@ -623,7 +623,7 @@ def marshal(data, fields, envelope=None):
     items = ((k, marshal(data, v) if isinstance(v, dict)
               else make(v).output(k, data))
              for k, v in fields.items())
-    return dict([(envelope, dict(items))]) if envelope else dict(items)
+    return dict([(envelope, dict(items))]) if envelope and isinstance(envelope, str) else dict(items)
 
 
 class marshal_with(object):
