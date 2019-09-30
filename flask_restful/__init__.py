@@ -604,10 +604,10 @@ def marshal(data, fields, envelope=None):
     >>> mfields = { 'a': fields.Raw }
 
     >>> marshal(data, mfields)
-    OrderedDict([('a', 100)])
+    { 'a': 100 }
 
     >>> marshal(data, mfields, envelope='data')
-    OrderedDict([('data', OrderedDict([('a', 100)]))])
+    { 'data': { 'a': 100 } }
 
     """
 
@@ -617,13 +617,13 @@ def marshal(data, fields, envelope=None):
         return cls
 
     if isinstance(data, (list, tuple)):
-        return (OrderedDict([(envelope, [marshal(d, fields) for d in data])])
+        return (dict([(envelope, [marshal(d, fields) for d in data])])
                 if envelope else [marshal(d, fields) for d in data])
 
     items = ((k, marshal(data, v) if isinstance(v, dict)
               else make(v).output(k, data))
              for k, v in fields.items())
-    return OrderedDict([(envelope, OrderedDict(items))]) if envelope else OrderedDict(items)
+    return dict([(envelope, dict(items))]) if envelope else dict(items)
 
 
 class marshal_with(object):
@@ -637,7 +637,7 @@ class marshal_with(object):
     ...
     ...
     >>> get()
-    OrderedDict([('a', 100)])
+    { 'a': 100 }
 
     >>> @marshal_with(mfields, envelope='data')
     ... def get():
@@ -645,7 +645,7 @@ class marshal_with(object):
     ...
     ...
     >>> get()
-    OrderedDict([('data', OrderedDict([('a', 100)]))])
+    { 'data': { 'a': 100 } }
 
     see :meth:`flask_restful.marshal`
     """
