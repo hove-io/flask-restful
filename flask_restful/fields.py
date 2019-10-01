@@ -153,7 +153,7 @@ class Nested(Raw):
             elif self.default is not None:
                 return self.default
 
-        return marshal(value, self.nested, self.display_null)
+        return marshal(value, self.nested, display_null=self.display_null)
 
 
 class List(Raw):
