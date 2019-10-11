@@ -153,7 +153,7 @@ class Nested(Raw):
             elif self.default is not None:
                 return self.default
 
-        return marshal(value, self.nested, self.display_null)
+        return marshal(value, self.nested, display_null=self.display_null)
 
 
 class List(Raw):
@@ -199,12 +199,14 @@ class List(Raw):
         value = get_value(key if self.attribute is None else self.attribute, data)
         # we cannot really test for external dict behavior
         if is_indexable_but_not_string(value) and not isinstance(value, dict):
+            if not self.display_empty and len(value) == 0:
+                return None
             return self.format(value)
 
         if value is None:
             return self.default
 
-        return [marshal(value, self.container.nested, self.display_empty)]
+        return [marshal(value, self.container.nested, display_null=self.display_empty)]
 
 
 class String(Raw):
