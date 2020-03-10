@@ -51,12 +51,17 @@ def natural(value):
 
 def boolean(value):
     """Parse the string "true" or "false" as a boolean (case insensitive)"""
+    if isinstance(value, bool):
+        return value
+
+    if not value:
+        raise ValueError("boolean type must be non-null")
     value = value.lower()
-    if value == 'true':
+    if value in ('true', '1',):
         return True
-    if value == 'false':
+    if value in ('false', '0',):
         return False
-    raise ValueError("Invalid literal for boolean(): {}".format(value))
+    raise ValueError("Invalid literal for boolean(): {0}".format(value))
 
 
 def rfc822(dt):
