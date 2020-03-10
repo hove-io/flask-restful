@@ -50,7 +50,12 @@ def natural(value):
 
 
 def boolean(value):
-    """Parse the string "true" or "false" as a boolean (case insensitive)"""
+    """Parse the string ``"true"`` or ``"false"`` as a boolean (case
+    insensitive). Also accepts ``"1"`` and ``"0"`` as ``True``/``False``
+    (respectively). If the input is from the request JSON body, the type is
+    already a native python boolean, and will be passed through without
+    further parsing.
+    """
     if isinstance(value, bool):
         return value
 
