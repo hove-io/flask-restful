@@ -66,7 +66,7 @@ def boolean(value):
         return True
     if value in ('false', '0',):
         return False
-    raise ValueError("Invalid literal for boolean(): {0}".format(value))
+    raise ValueError("Invalid literal for boolean(): {}".format(value))
 
 
 def rfc822(dt):
