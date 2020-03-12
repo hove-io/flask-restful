@@ -59,12 +59,15 @@ def boolean(value):
     if isinstance(value, bool):
         return value
 
+    if isinstance(value, int):
+        return bool(value)
+
     if not value:
         raise ValueError("boolean type must be non-null")
     value = value.lower()
-    if value in ('true', '1',):
+    if value in ('true', '1'):
         return True
-    if value in ('false', '0',):
+    if value in ('false', '0'):
         return False
     raise ValueError("Invalid literal for boolean(): {}".format(value))
 
