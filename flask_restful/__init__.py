@@ -619,7 +619,7 @@ class Resource(MethodView):
         return resp
 
 
-def marshal(data, fields, envelope=None):
+def marshal(data, fields, envelope=None, display_null=True):
     """Takes raw data (in the form of a dict, list, object) and a dict of
     fields to output and filters the data based on those fields.
 
@@ -628,6 +628,8 @@ def marshal(data, fields, envelope=None):
                    response output
     :param envelope: optional key that will be used to envelop the serialized
                      response
+    :param display_null: Whether to display or not key : value
+                   when value is null
 
 
     >>> from flask_restful import fields, marshal
@@ -682,15 +684,18 @@ class marshal_with(object):
 
     see :meth:`flask_restful.marshal`
     """
-    def __init__(self, fields, envelope=None):
+    def __init__(self, fields, envelope=None, display_null=True):
         """
         :param fields: a dict of whose keys will make up the final
                        serialized response output
         :param envelope: optional key that will be used to envelop the serialized
                          response
+        :param display_null: Whether to display or not key : value
+                   when value is null
         """
         self.fields = fields
         self.envelope = envelope
+        self.display_null = display_null
 
     def __call__(self, f):
         @wraps(f)
@@ -698,9 +703,9 @@ class marshal_with(object):
             resp = f(*args, **kwargs)
             if isinstance(resp, tuple):
                 data, code, headers = unpack(resp)
-                return marshal(data, self.fields, self.envelope), code, headers
+                return marshal(data, self.fields, self.envelope, self.display_null), code, headers
             else:
-                return marshal(resp, self.fields, self.envelope)
+                return marshal(resp, self.fields, self.envelope, self.display_null)
         return wrapper
 
 
