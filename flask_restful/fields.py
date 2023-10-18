@@ -195,6 +195,8 @@ class List(Raw):
         value = get_value(key if self.attribute is None else self.attribute, data)
         # we cannot really test for external dict behavior
         if is_indexable_but_not_string(value) and not isinstance(value, dict):
+            if not self.display_empty and len(value) == 0:
+                return None
             return self.format(value)
 
         if value is None:
