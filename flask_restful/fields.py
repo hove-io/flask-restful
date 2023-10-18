@@ -162,8 +162,9 @@ class List(Raw):
     :param cls_or_instance: The field type the list will contain.
     """
 
-    def __init__(self, cls_or_instance, **kwargs):
+    def __init__(self, cls_or_instance, display_empty=True, **kwargs):
         super(List, self).__init__(**kwargs)
+        self.display_empty = display_empty
         error_msg = ("The type of the list elements must be a subclass of "
                      "flask_restful.fields.Raw")
         if isinstance(cls_or_instance, type):
