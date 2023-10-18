@@ -244,6 +244,9 @@ def boolean(value):
     if isinstance(value, bool):
         return value
 
+    if isinstance(value, int):
+        return bool(value)
+
     if not value:
         raise ValueError("boolean type must be non-null")
     value = value.lower()
