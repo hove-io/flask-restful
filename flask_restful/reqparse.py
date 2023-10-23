@@ -160,16 +160,8 @@ class Argument(object):
         with a 400 status and an error message
 
         :param error: the error that was raised
-        :param bundle_errors: do not abort when first error occurs, return a
-            dict with the name of the argument and the error message to be
-            bundled
         """
-        error_str = six.text_type(error)
-        error_msg = self.help.format(error_msg=error_str) if self.help else error_str
-        msg = {self.name: error_msg}
-
-        if current_app.config.get("BUNDLE_ERRORS", False) or bundle_errors:
-            return error, msg
+        msg = self.help if self.help is not None else str(error)
         flask_restful.abort(400, message=msg)
 
     def parse(self, request, bundle_errors=False):
