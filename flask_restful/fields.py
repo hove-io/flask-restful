@@ -136,9 +136,10 @@ class Nested(Raw):
         null)
     """
 
-    def __init__(self, nested, allow_null=False, **kwargs):
+    def __init__(self, nested, allow_null=False, display_null=True, **kwargs):
         self.nested = nested
         self.allow_null = allow_null
+        self.display_null = display_null
         super(Nested, self).__init__(**kwargs)
 
     def output(self, key, obj):
@@ -149,7 +150,7 @@ class Nested(Raw):
             elif self.default is not None:
                 return self.default
 
-        return marshal(value, self.nested)
+        return marshal(value, self.nested, display_null=self.display_null)
 
 
 class List(Raw):
@@ -161,8 +162,9 @@ class List(Raw):
     :param cls_or_instance: The field type the list will contain.
     """
 
-    def __init__(self, cls_or_instance, **kwargs):
+    def __init__(self, cls_or_instance, display_empty=True, **kwargs):
         super(List, self).__init__(**kwargs)
+        self.display_empty = display_empty
         error_msg = ("The type of the list elements must be a subclass of "
                      "flask_restful.fields.Raw")
         if isinstance(cls_or_instance, type):
@@ -194,12 +196,14 @@ class List(Raw):
         value = get_value(key if self.attribute is None else self.attribute, data)
         # we cannot really test for external dict behavior
         if is_indexable_but_not_string(value) and not isinstance(value, dict):
+            if not self.display_empty and len(value) == 0:
+                return None
             return self.format(value)
 
         if value is None:
             return self.default
 
-        return [marshal(value, self.container.nested)]
+        return [marshal(value, self.container.nested, display_null=self.display_empty)]
 
 
 class String(Raw):
