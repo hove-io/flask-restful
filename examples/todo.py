@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.restful import reqparse, abort, Api, Resource
+from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
 api = Api(app)
@@ -15,7 +15,7 @@ def abort_if_todo_doesnt_exist(todo_id):
         abort(404, message="Todo {} doesn't exist".format(todo_id))
 
 parser = reqparse.RequestParser()
-parser.add_argument('task', type=str)
+parser.add_argument('task')
 
 # Todo
 #   show a single todo item and lets you delete them
